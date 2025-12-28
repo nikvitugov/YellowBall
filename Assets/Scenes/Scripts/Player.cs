@@ -10,9 +10,9 @@ public class PlayerMove : MonoBehaviour
     public Vector3 respawnPosition; 
 
     public GroundCheck groundCheck;
+    private BoxCollider2D box;
 
     [SerializeField] private Rigidbody2D rb;
-
 
     public int maxHealth = 100;
     [SerializeField] private int currentHealth;
@@ -33,6 +33,11 @@ public class PlayerMove : MonoBehaviour
         if (collision.CompareTag("Checkpoint"))
         {
             respawnPosition = transform.position;
+        }
+
+        if (collision.CompareTag("WallClimbing"))
+        {
+            box.size = new Vector2(0.67f, 0.05f);
         }
     }
 
