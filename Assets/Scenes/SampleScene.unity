@@ -5729,6 +5729,7 @@ GameObject:
   - component: {fileID: 391916766}
   - component: {fileID: 391916768}
   - component: {fileID: 391916767}
+  - component: {fileID: 391916769}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5834,10 +5835,30 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &391916769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391916764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de898e2828944d49bd0410b94fb391a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostCount: 10
+  trailDuration: 0.1
+  maxAlpha: 0.45
+  tint: {r: 1, g: 0.92, b: 0.45, a: 1}
+  minSpeed: 1.5
+  maxSpeed: 9
+  trailShader: {fileID: 4800000, guid: 4c98138b185c49f3b79ee1c862cc3326, type: 3}
+  sources: []
 --- !u!1 &400340255
 GameObject:
   m_ObjectHideFlags: 0
@@ -7492,7 +7513,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.09000015, y: 0.09999895, z: -7.2299995}
-  m_LocalScale: {x: 0.3832, y: -0.006525819, z: 0.52766}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 391916765}
