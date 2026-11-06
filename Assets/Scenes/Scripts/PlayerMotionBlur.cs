@@ -13,9 +13,9 @@ public class PlayerMotionBlur : MonoBehaviour
     [Tooltip("Сколько копий рисовать. Больше — глаже размытие")]
     [Range(2, 24)] public int ghostCount = 10;
     [Tooltip("Длина шлейфа во времени, сек")]
-    [Range(0.02f, 0.4f)] public float trailDuration = 0.1f;
+    [Range(0.02f, 0.4f)] public float trailDuration = 0.06f;
     [Tooltip("Прозрачность ближайшей копии")]
-    [Range(0f, 1f)] public float maxAlpha = 0.45f;
+    [Range(0f, 1f)] public float maxAlpha = 0.2f;
     [Tooltip("Цвет шлейфа (умножается на текстуру модели)")]
     public Color tint = new Color(1f, 0.92f, 0.45f, 1f);
 

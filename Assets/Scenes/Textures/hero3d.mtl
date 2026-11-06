@@ -1,0 +1,3 @@
+newmtl hero3d
+Kd 1 1 1
+map_Kd hero3d_tex.png
