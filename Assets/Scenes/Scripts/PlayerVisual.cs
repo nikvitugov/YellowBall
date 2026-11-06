@@ -23,7 +23,9 @@ public class PlayerVisual : MonoBehaviour
     public KeyCode switchKey = KeyCode.Tab;
 
     [Header("Разворот")]
-    [Tooltip("Смотрит ли модель вправо в исходном положении. Если перс бегает спиной вперёд — сними галочку")]
+    [Tooltip("Угол, на который герой поворачивается в сторону бега (0 — смотрит прямо в камеру, 90 — строго в профиль)")]
+    [Range(0f, 90f)] public float faceAngle = 45f;
+    [Tooltip("Только для плоских моделей: смотрит ли картинка вправо. Если перс бегает спиной вперёд — сними галочку")]
     public bool modelFacesRight = true;
     [Tooltip("Скорость разворота (больше — быстрее)")]
     public float turnSpeed = 7f;
@@ -62,6 +64,7 @@ public class PlayerVisual : MonoBehaviour
     private Vector3[] basePos;
     private Quaternion[] baseRot;
     private Vector3[] baseScale;
+    private HeroModelInfo[] infos;
     private float face = 1f;       // текущее (сглаженное) направление: 1 вправо, -1 влево
     private float targetFace = 1f;
     private float phase;
@@ -91,12 +94,14 @@ public class PlayerVisual : MonoBehaviour
         basePos = new Vector3[models.Length];
         baseRot = new Quaternion[models.Length];
         baseScale = new Vector3[models.Length];
+        infos = new HeroModelInfo[models.Length];
         for (int i = 0; i < models.Length; i++)
         {
             if (models[i] == null) continue;
             basePos[i] = models[i].localPosition;
             baseRot[i] = models[i].localRotation;
             baseScale[i] = models[i].localScale;
+            infos[i] = models[i].GetComponent<HeroModelInfo>();
         }
         SetModel(Mathf.Clamp(activeModel, 0, models.Length - 1));
     }
@@ -193,20 +198,22 @@ public class PlayerVisual : MonoBehaviour
         float bob = Mathf.Abs(s) * bobHeight * runAmount;
         float tilt = s * swayAngle * runAmount - targetFace * leanAngle * runAmount;
 
-        // Объёмный разворот: модель поворачивается вокруг вертикальной оси лицом к камере.
-        // Первые 90° — поворот, на «ребре» модель зеркалится, следующие 90° — доворот.
-        // Так спина никогда не показывается (важно, если модель плоская), а выглядит как полный поворот на 180°.
-        float side = face >= 0f ? 1f : -1f;
-        float t = Mathf.Abs(face);
-        t = t * t * (3f - 2f * t);                    // плавный разгон/торможение
-        float yaw = 90f * (1f - t) * side;
+        // Разворот к стороне бега: в покое герой повёрнут на faceAngle вправо или влево,
+        // при смене направления проворачивается через «лицом к камере».
+        // Плоская модель (лицо только спереди) в момент «лицом к камере» ещё и зеркалится.
+        var info = infos[activeModel];
+        bool flat = info != null && info.flat;
+        float angle = faceAngle * (info != null ? info.turnAngleScale : 1f);
+        float g = face * (1.5f - 0.5f * face * face);  // плавно: -1..1 с торможением у краёв
+        float yaw = -angle * g;                        // минус: в Unity поворот на -Y разворачивает лицо вправо
         float hop = Mathf.Sin((1f - Mathf.Abs(face)) * Mathf.PI * 0.5f) * turnHop;
+        float side = face >= 0f ? 1f : -1f;
 
         int m = activeModel;
         visual.localPosition = basePos[m] + Vector3.up * (bob + hop);
         visual.localRotation = Quaternion.Euler(0f, 0f, tilt) * Quaternion.Euler(0f, yaw, 0f) * baseRot[m];
 
-        float mirror = modelFacesRight ? side : -side;
+        float mirror = flat ? (modelFacesRight ? side : -side) : 1f;
         float wide = 1f - squash * 0.6f;              // объём примерно сохраняется
         Vector3 sc = baseScale[m] * Mathf.Max(0f, appear);
         sc.x *= mirror * wide;

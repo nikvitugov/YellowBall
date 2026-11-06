@@ -66,14 +66,14 @@ public static class PlayerSetup
 
         var models = new System.Collections.Generic.List<Transform>();
 
-        // Сгенерированная модель: смотрит в +Z и чуть влево -> разворот на 180° и зеркало, чтобы смотрела вправо
+        // Сгенерированная модель: объёмная, смотрит в +Z -> разворот на 180°, чтобы смотрела в камеру
         var ai = BuildModel(pt, "HeroAI", HeroAIObj, HeroAITex, HeroAIMat, height, feet,
-                            Quaternion.Euler(0f, 180f, 0f), mirror: true, emission: 0.45f);
+                            Quaternion.Euler(0f, 180f, 0f), mirror: false, emission: 0.45f, flat: false);
         if (ai != null) models.Add(ai);
 
         // Надутая модель из картинки
         var inflated = BuildModel(pt, "Hero3D", Hero3DObj, Hero3DTex, Hero3DMat, height, feet,
-                                  Quaternion.identity, mirror: false, emission: 0.75f);
+                                  Quaternion.identity, mirror: false, emission: 0.75f, flat: true);
         if (inflated != null) models.Add(inflated);
 
         if (models.Count == 0) { Debug.LogError("PlayerSetup: не нашёл ни одной модели героя"); return; }
@@ -123,7 +123,7 @@ public static class PlayerSetup
     }
 
     static Transform BuildModel(Transform player, string name, string objPath, string texPath, string matPath,
-                                float height, Vector3 feet, Quaternion rot, bool mirror, float emission)
+                                float height, Vector3 feet, Quaternion rot, bool mirror, float emission, bool flat)
     {
         var mesh = AssetDatabase.LoadAllAssetsAtPath(objPath).OfType<Mesh>().FirstOrDefault();
         var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(texPath);
@@ -159,6 +159,11 @@ public static class PlayerSetup
         }
         t.GetComponent<MeshFilter>().sharedMesh = mesh;
         t.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+        var info = GetOrAdd<HeroModelInfo>(t.gameObject);
+        info.flat = flat;
+        info.turnAngleScale = flat ? 0.6f : 1f;   // плоскую сильно поворачивать нельзя — видно, что она «блин»
+        EditorUtility.SetDirty(info);
 
         float s = height / mesh.bounds.size.y;
         var scale = new Vector3(mirror ? -s : s, s, s);
