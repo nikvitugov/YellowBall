@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -20,11 +22,28 @@ public class PlayerMove : MonoBehaviour
     public int maxHealth = 100;
     [SerializeField] private int currentHealth;
     public Vector3 respawnPosition;
+    [Tooltip("Сколько секунд после смерти до появления на чекпоинте")]
+    public float respawnDelay = 1f;
+
+    /// <summary>Оттолкнулись от земли (не вызывается каждый кадр при лазании).</summary>
+    public event Action Jumped;
+    /// <summary>Приземлились; параметр — скорость падения в момент касания.</summary>
+    public event Action<float> Landed;
+    /// <summary>Умерли (до задержки респауна).</summary>
+    public event Action Died;
+    /// <summary>Появились на чекпоинте.</summary>
+    public event Action Respawned;
+
+    public bool IsDead { get; private set; }
+    public bool IsGrounded => groundCheck != null && groundCheck.isGrounded;
 
     private float moveInput;
     private bool jumpHeld;
     private Vector2 defaultBoxSize;
     private int wallZones; // сколько зон WallClimbing сейчас касаемся
+    private bool wasGrounded;
+    private float lastAirVy;
+    private float lastJumpTime = -10f;
 
     private void Awake()
     {
@@ -38,28 +57,50 @@ public class PlayerMove : MonoBehaviour
     {
         currentHealth = maxHealth;
         respawnPosition = transform.position; // стартовая точка = первый чекпоинт
+        wasGrounded = IsGrounded;
     }
 
     private void Update()
     {
         // Ввод читаем в Update, физику применяем в FixedUpdate
         moveInput = 0f;
+        jumpHeld = false;
+        if (IsDead) return;
+
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) moveInput -= 1f;
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) moveInput += 1f;
-
         jumpHeld = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space);
     }
 
     private void FixedUpdate()
     {
+        if (IsDead) return;
+
+        bool grounded = IsGrounded;
+        if (grounded && !wasGrounded && lastAirVy < -0.5f)
+            Landed?.Invoke(-lastAirVy);
+        if (!grounded) lastAirVy = rb.velocity.y;
+        wasGrounded = grounded;
+
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        if (jumpHeld && groundCheck != null && groundCheck.isGrounded)
+        if (jumpHeld && grounded)
+        {
+            // Новый прыжок — только если не летим уже вверх (при лазании скорость задаётся каждый кадр)
+            bool takeoff = rb.velocity.y < jumpForce * 0.5f && Time.time - lastJumpTime > 0.15f;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            if (takeoff)
+            {
+                lastJumpTime = Time.time;
+                Jumped?.Invoke();
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (IsDead) return;
+
         if (collision.CompareTag("Spike"))
         {
             TakeDamage(100);
@@ -86,22 +127,35 @@ public class PlayerMove : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (IsDead) return;
         currentHealth -= damage;
         Debug.Log("Player Health: " + currentHealth);
 
         if (currentHealth <= 0)
-            Die();
+            StartCoroutine(DieRoutine());
     }
 
-    private void Die()
+    private IEnumerator DieRoutine()
     {
         Debug.Log("Player Died!");
-        rb.velocity = Vector2.zero; // иначе после респауна продолжаем падать с той же скоростью
+        IsDead = true;
+        rb.velocity = Vector2.zero;
+        if (groundCheck != null) groundCheck.ResetState();
+        rb.simulated = false;           // замираем: никакой физики и триггеров, пока «рассыпаны»
+        Died?.Invoke();
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        wallZones = 0;
+        if (box != null) box.size = defaultBoxSize;
         rb.position = respawnPosition;
         transform.position = respawnPosition;
+        rb.velocity = Vector2.zero;
+        rb.simulated = true;
         currentHealth = maxHealth;
-
-        var blur = GetComponent<PlayerMotionBlur>();
-        if (blur != null) blur.ResetTrail(); // чтобы шлейф не тянулся через весь уровень
+        wasGrounded = false;
+        lastAirVy = 0f;
+        IsDead = false;
+        Respawned?.Invoke();
     }
 }

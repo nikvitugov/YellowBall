@@ -43,6 +43,8 @@ public class PlayerMotionBlur : MonoBehaviour
     private Rigidbody2D rb;
     private Vector3 lastPosition;
     private float smoothedIntensity;
+    private bool autoSources;
+    private PlayerMove move;
 
     private static readonly int ColorId = Shader.PropertyToID("_Color");
     private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
@@ -62,18 +64,35 @@ public class PlayerMotionBlur : MonoBehaviour
         material = new Material(trailShader) { hideFlags = HideFlags.HideAndDontSave };
         block = new MaterialPropertyBlock();
 
-        if (sources == null || sources.Length == 0)
-            sources = GetComponentsInChildren<MeshRenderer>();
+        autoSources = sources == null || sources.Length == 0;
+        RefreshSources();
+        ResetTrail();
 
+        move = GetComponent<PlayerMove>();
+        if (move != null)
+        {
+            move.Died += ResetTrail;      // чтобы шлейф не тянулся через весь уровень
+            move.Respawned += ResetTrail;
+        }
+    }
+
+    /// <summary>Перечитать модели (после смены модели героя).</summary>
+    public void RefreshSources()
+    {
+        if (autoSources || sources == null || sources.Length == 0)
+        {
+            autoSources = true;
+            sources = GetComponentsInChildren<MeshRenderer>();   // только активные
+        }
         filters = new MeshFilter[sources.Length];
         for (int i = 0; i < sources.Length; i++)
             filters[i] = sources[i] != null ? sources[i].GetComponent<MeshFilter>() : null;
-
         ResetTrail();
     }
 
     private void OnDestroy()
     {
+        if (move != null) { move.Died -= ResetTrail; move.Respawned -= ResetTrail; }
         if (material != null) Destroy(material);
     }
 

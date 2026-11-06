@@ -26,7 +26,10 @@ public class GroundCheck : MonoBehaviour
         isGrounded = contacts > 0;
     }
 
-    private void OnDisable()
+    private void OnDisable() => ResetState();
+
+    /// <summary>Сбросить касания (при смерти/телепорте игрока).</summary>
+    public void ResetState()
     {
         contacts = 0;
         isGrounded = false;
