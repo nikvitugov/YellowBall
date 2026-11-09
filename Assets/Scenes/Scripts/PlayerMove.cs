@@ -33,8 +33,12 @@ public class PlayerMove : MonoBehaviour
     public event Action Died;
     /// <summary>Появились на чекпоинте.</summary>
     public event Action Respawned;
+    /// <summary>Дошли до финиша (WinZone): дальше управление выключено.</summary>
+    public event Action Won;
 
     public bool IsDead { get; private set; }
+    /// <summary>Уровень пройден: герой стоит на месте и не слушается клавиш.</summary>
+    public bool HasWon { get; private set; }
     public bool IsGrounded => groundCheck != null && groundCheck.isGrounded;
 
     private float moveInput;
@@ -65,7 +69,7 @@ public class PlayerMove : MonoBehaviour
         // Ввод читаем в Update, физику применяем в FixedUpdate
         moveInput = 0f;
         jumpHeld = false;
-        if (IsDead) return;
+        if (IsDead || HasWon) return;
 
         // клавиши берутся из настроек (меню Options -> Controls)
         if (GameSettings.Held(GameSettings.Action.Left)) moveInput -= 1f;
@@ -76,6 +80,14 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         if (IsDead) return;
+
+        if (HasWon)
+        {
+            // плавно тормозим; гравитация остаётся — если финиш в воздухе, герой мягко опустится
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0f, moveSpeed * 8f * Time.fixedDeltaTime),
+                                      Mathf.Min(rb.velocity.y, 0f));
+            return;
+        }
 
         bool grounded = IsGrounded;
         if (grounded && !wasGrounded && lastAirVy < -0.5f)
@@ -126,9 +138,19 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    /// <summary>Конец уровня: выключает управление (вызывает WinZone).</summary>
+    public void Win()
+    {
+        if (IsDead || HasWon) return;
+        HasWon = true;
+        moveInput = 0f;
+        jumpHeld = false;
+        Won?.Invoke();
+    }
+
     public void TakeDamage(int damage)
     {
-        if (IsDead) return;
+        if (IsDead || HasWon) return;
         currentHealth -= damage;
         Debug.Log("Player Health: " + currentHealth);
 
