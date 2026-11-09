@@ -64,8 +64,7 @@ public static class MenuBuilder
 
         // ---------- главное меню (справа, герой виден слева) ----------
         var main = Panel(ct, "MainPanel", new Vector2(1f, 0.5f), new Vector2(-380, 0), new Vector2(560, 680));
-        var title = Label(main, "Title", "YELLOW LIGHT\nIN THE DARK", 60, new Vector2(0, 225), new Vector2(540, 170), Yellow, FontStyle.Bold);
-        title.lineSpacing = 0.9f;
+        var title = Label(main, "Title", "YELLOW LIGHT", 68, new Vector2(0, 220), new Vector2(540, 110), Yellow, FontStyle.Bold);
         title.horizontalOverflow = HorizontalWrapMode.Overflow;
         var play = MenuButton(main, "Play", "Play", new Vector2(0, 60), new Vector2(420, 96), primary: true);
         var options = MenuButton(main, "Options", "Options", new Vector2(0, -60), new Vector2(420, 96));
