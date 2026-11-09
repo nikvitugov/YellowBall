@@ -1,5 +1,5 @@
-// Текстура, уложенная в мировых единицах: на растянутом квадрате-платформе она не растягивается,
-// а повторяется; на наклонной платформе поворачивается вместе с ней (доски идут вдоль платформы).
+// Текстура в мировых единицах: на растянутом квадрате-платформе она не растягивается, а повторяется,
+// и «приклеена» к объекту — едет, поворачивается и отражается вместе с ним.
 // Работает и для спрайтов (SpriteRenderer), и для 3D-объектов. Без освещения, как обычные спрайты.
 Shader "YellowBall/WorldTiled"
 {
@@ -9,7 +9,8 @@ Shader "YellowBall/WorldTiled"
         _Tex ("Текстура", 2D) = "white" {}
         _Color ("Оттенок", Color) = (1, 1, 1, 1)
         _TileSize ("Ширина повтора текстуры, юниты", Float) = 2
-        [Toggle] _AlongObject ("Поворачивать вместе с объектом", Float) = 1
+        [Toggle] _AlongObject ("Привязать к объекту (поворот, отражение, движение)", Float) = 1
+        [Toggle] _StickToObject ("Без привязки: всё равно ехать вместе с объектом", Float) = 1
         [Toggle] _UseSpriteColor ("Подкрашивать цветом спрайта", Float) = 0
     }
     SubShader
@@ -31,7 +32,7 @@ Shader "YellowBall/WorldTiled"
             sampler2D _Tex;
             float4 _Tex_TexelSize;      // (1/ширина, 1/высота, ширина, высота)
             fixed4 _Color;
-            float _TileSize, _AlongObject, _UseSpriteColor;
+            float _TileSize, _AlongObject, _UseSpriteColor, _StickToObject;
 
             struct appdata { float4 vertex : POSITION; fixed4 color : COLOR; };
             struct v2f { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; fixed4 color : COLOR; };
@@ -39,22 +40,27 @@ Shader "YellowBall/WorldTiled"
             v2f vert (appdata v)
             {
                 float3 wp = mul(unity_ObjectToWorld, v.vertex).xyz;
-
-                // направления «вдоль» и «вверх»: мировые оси или оси объекта (та, что ближе к горизонтали, — «вдоль»)
-                float2 along = float2(1, 0);
+                float aspect = _Tex_TexelSize.z / _Tex_TexelSize.w;   // ширина/высота текстуры
+                float2 p;
                 if (_AlongObject > 0.5)
                 {
-                    float2 dx = normalize(mul((float3x3)unity_ObjectToWorld, float3(1, 0, 0)).xy);
-                    float2 dy = normalize(mul((float3x3)unity_ObjectToWorld, float3(0, 1, 0)).xy);
-                    along = abs(dx.x) >= abs(dy.x) ? dx : dy;
-                    if (along.x < 0) along = -along;
+                    // Координаты самого объекта, переведённые в юниты мира: текстура повторяет
+                    // поворот (полностью, на любой угол), отражение и перемещение спрайта,
+                    // но не растягивается вместе с его масштабом.
+                    float sx = length(mul((float3x3)unity_ObjectToWorld, float3(1, 0, 0)));
+                    float sy = length(mul((float3x3)unity_ObjectToWorld, float3(0, 1, 0)));
+                    p = v.vertex.xy * float2(sx, sy);
                 }
-                float2 up = float2(-along.y, along.x);
+                else
+                {
+                    // Мировые оси: текстура всегда ровная; от центра объекта — едет вместе с ним,
+                    // от нуля мира — соседние объекты стыкуются в один узор
+                    p = wp.xy - (_StickToObject > 0.5 ? unity_ObjectToWorld._m03_m13 : float2(0, 0));
+                }
 
-                float aspect = _Tex_TexelSize.z / _Tex_TexelSize.w;   // ширина/высота текстуры
                 v2f o;
                 o.pos = mul(UNITY_MATRIX_VP, float4(wp, 1));
-                o.uv = float2(dot(wp.xy, along) / _TileSize, dot(wp.xy, up) / _TileSize * aspect);
+                o.uv = float2(p.x / _TileSize, p.y / _TileSize * aspect);
                 o.color = v.color;
                 return o;
             }
