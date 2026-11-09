@@ -101,6 +101,7 @@ public class PlayerDeathEffect : MonoBehaviour
         var r = go.GetComponent<ParticleSystemRenderer>();
         r.renderMode = ParticleSystemRenderMode.Billboard;
         r.sortMode = ParticleSystemSortMode.Distance;
+        r.sortingOrder = 20;                    // в игровом слое поверх платформ и шипов
         r.material = particleMaterial != null ? particleMaterial : new Material(Shader.Find("Sprites/Default"));
         return p;
     }
