@@ -1480,6 +1480,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4528302
       objectReference: {fileID: 0}
+    - target: {fileID: 7963294745216181674, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c7c1526389ad4db6ae646919a1798fcb, type: 2}
     - target: {fileID: 8633918400838842619, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2671875
@@ -3421,6 +3425,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4528302
       objectReference: {fileID: 0}
+    - target: {fileID: 7963294745216181674, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c7c1526389ad4db6ae646919a1798fcb, type: 2}
     - target: {fileID: 8633918400838842619, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2671875
@@ -3805,6 +3813,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 68f2b73926a04019afdbc31878990af6, type: 2}
     - target: {fileID: 6861890183790494795, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
       propertyPath: m_GravityScale
       value: 2
@@ -5367,6 +5379,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4509804
       objectReference: {fileID: 0}
+    - target: {fileID: 7963294745216181674, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c7c1526389ad4db6ae646919a1798fcb, type: 2}
     - target: {fileID: 8633918400838842619, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
       propertyPath: m_LocalScale.x
       value: 13.54605
@@ -6396,6 +6412,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 68f2b73926a04019afdbc31878990af6, type: 2}
     - target: {fileID: 6861890183790494795, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
       propertyPath: m_GravityScale
       value: 7
@@ -6661,6 +6693,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4509804
       objectReference: {fileID: 0}
+    - target: {fileID: 7963294745216181674, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c7c1526389ad4db6ae646919a1798fcb, type: 2}
     - target: {fileID: 8633918400838842619, guid: 52932ed8fe1b2f549ab45967c68b9f27, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2671875
@@ -8792,6 +8828,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6364844598796763240, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 68f2b73926a04019afdbc31878990af6, type: 2}
     - target: {fileID: 9056989955684001492, guid: 088e4dbaf341f6d4ab3095cc7e7d121a, type: 3}
       propertyPath: m_Name
       value: Platform (54)
