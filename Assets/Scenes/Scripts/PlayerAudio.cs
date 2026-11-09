@@ -18,14 +18,11 @@ public class PlayerAudio : MonoBehaviour
     [Range(0.5f, 1.5f)] public float jumpPitch = 0.78f;
     [Tooltip("Небольшой случайный разброс высоты прыжка, чтобы не надоедал")]
     public float jumpPitchJitter = 0.05f;
-    [Tooltip("Глухость прыжка: срез высоких частот, Гц (22000 = без фильтра)")]
-    [Range(500f, 22000f)] public float jumpMuffle = 1600f;
 
     private PlayerMove move;
     private PlayerVisual visual;
     private Rigidbody2D rb;
     private AudioSource oneShots;
-    private AudioLowPassFilter jumpFilter;
     private AudioSource steps;
     private float stepsFade;
 
@@ -35,14 +32,10 @@ public class PlayerAudio : MonoBehaviour
         visual = GetComponent<PlayerVisual>();
         rb = GetComponent<Rigidbody2D>();
 
-        // у прыжка свой объект: фильтр глухости действует только на него, а не на шаги
-        var jumpGo = new GameObject("JumpAudio");
-        jumpGo.transform.SetParent(transform, false);
-        oneShots = jumpGo.AddComponent<AudioSource>();
+        // глухость прыжка «запечена» в jumping.wav (Tools/make_muffled.py), здесь только высота
+        oneShots = gameObject.AddComponent<AudioSource>();
         oneShots.playOnAwake = false;
         oneShots.spatialBlend = 0f;
-        jumpFilter = jumpGo.AddComponent<AudioLowPassFilter>();
-        jumpFilter.lowpassResonanceQ = 1f;
 
         steps = gameObject.AddComponent<AudioSource>();
         steps.playOnAwake = false;
@@ -67,7 +60,6 @@ public class PlayerAudio : MonoBehaviour
     {
         if (jumpClip == null) return;
         oneShots.pitch = jumpPitch + Random.Range(-jumpPitchJitter, jumpPitchJitter);
-        jumpFilter.cutoffFrequency = jumpMuffle;
         oneShots.PlayOneShot(jumpClip, jumpVolume);
     }
 

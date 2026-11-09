@@ -691,6 +691,7 @@ MonoBehaviour:
   jumpVolume: 0.7
   stepsVolume: 0.5
   stepsInClip: 2
+  jumpPitch: 0.78
   jumpPitchJitter: 0.08
 --- !u!114 &2092912519575242918
 MonoBehaviour:

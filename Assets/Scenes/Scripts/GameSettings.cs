@@ -106,8 +106,17 @@ public static class GameSettings
         Changed?.Invoke("resolution");
     }
 
+    /// <summary>Игра запущена в браузере (WebGL): там нет выбора разрешения и кнопки выхода.</summary>
+    public static bool IsWeb => Application.platform == RuntimePlatform.WebGLPlayer;
+
     private static void ApplyResolution()
     {
+        if (IsWeb)
+        {
+            // в браузере размер задаёт страница; полный экран браузер включит по следующему клику
+            Screen.fullScreen = Fullscreen;
+            return;
+        }
         if (ResolutionWidth <= 0 || ResolutionHeight <= 0) return;
         // в редакторе размер задаёт окно Game, это сработает только в собранной игре
         Screen.SetResolution(ResolutionWidth, ResolutionHeight,
@@ -123,6 +132,7 @@ public static class GameSettings
         ResolutionWidth = PlayerPrefs.GetInt("resW", Screen.currentResolution.width);
         ResolutionHeight = PlayerPrefs.GetInt("resH", Screen.currentResolution.height);
         Fullscreen = PlayerPrefs.GetInt("fullscreen", 1) == 1;
+        if (IsWeb) Fullscreen = false;   // страница всегда открывается в окне
         for (int i = 0; i < keys.Length; i++)
             keys[i] = (KeyCode)PlayerPrefs.GetInt("key" + i, (int)PresetWASD[i]);
     }
@@ -143,7 +153,7 @@ public static class GameSettings
     {
         Load();
         AudioListener.volume = Volume;
-        if (!Application.isEditor) ApplyResolution();
+        if (!Application.isEditor && !IsWeb) ApplyResolution();
 
         // Esc в игре — назад в меню
         var go = new GameObject("GameSettings") { hideFlags = HideFlags.HideInHierarchy };

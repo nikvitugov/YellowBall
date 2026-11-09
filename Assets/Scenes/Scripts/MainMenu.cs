@@ -87,8 +87,32 @@ public class MainMenu : MonoBehaviour
             keyButtons[i].onClick.AddListener(() => StartRebind(a));
         }
 
+        if (GameSettings.IsWeb) AdaptForWeb();
+
         LoadValuesIntoUI();
         ShowMain();
+    }
+
+    /// <summary>
+    /// В браузере: нет кнопки Quit (из вкладки не «выйти») и нет выбора разрешения
+    /// (размер задаёт страница). Остальные кнопки сдвигаются, чтобы не было дыры.
+    /// </summary>
+    private void AdaptForWeb()
+    {
+        var quit = mainPanel.transform.Find("Quit");
+        if (quit != null && quit.gameObject.activeSelf)
+        {
+            float step = 105f;
+            quit.gameObject.SetActive(false);
+            foreach (RectTransform child in mainPanel.transform)
+                if (child != quit) child.anchoredPosition += new Vector2(0f, -step * 0.5f);
+            var panel = (RectTransform)mainPanel.transform;
+            panel.sizeDelta -= new Vector2(0f, step);
+        }
+
+        resolutionDropdown.gameObject.SetActive(false);
+        var label = resolutionDropdown.transform.parent.Find("Label Resolution");
+        if (label != null) label.gameObject.SetActive(false);
     }
 
     private void LoadValuesIntoUI()
@@ -99,7 +123,7 @@ public class MainMenu : MonoBehaviour
         int idx = resolutions.IndexOf(new Vector2Int(GameSettings.ResolutionWidth, GameSettings.ResolutionHeight));
         resolutionDropdown.value = Mathf.Max(0, idx);
         resolutionDropdown.RefreshShownValue();
-        fullscreenToggle.isOn = GameSettings.Fullscreen;
+        fullscreenToggle.isOn = GameSettings.IsWeb ? Screen.fullScreen : GameSettings.Fullscreen;
         ignoreEvents = false;
         RefreshLabels();
     }
