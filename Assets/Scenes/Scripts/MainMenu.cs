@@ -17,6 +17,11 @@ public class MainMenu : MonoBehaviour
     [Header("Панели")]
     public GameObject mainPanel;
     public GameObject optionsPanel;
+    public GameObject aboutPanel;
+
+    [Header("About")]
+    public string discordUrl = "https://discord.gg/NU6rnQV6R";
+    public string twitchUrl = "https://www.twitch.tv/astronaute_2015_niki";
 
     [Header("Вкладки Options")]
     public Button[] tabButtons = new Button[3];     // Audio, Video, Controls
@@ -137,7 +142,18 @@ public class MainMenu : MonoBehaviour
         CancelRebind();
         mainPanel.SetActive(true);
         optionsPanel.SetActive(false);
+        if (aboutPanel != null) aboutPanel.SetActive(false);
     }
+
+    public void ShowAbout()
+    {
+        mainPanel.SetActive(false);
+        optionsPanel.SetActive(false);
+        aboutPanel.SetActive(true);
+    }
+
+    public void OpenDiscord() => Application.OpenURL(discordUrl);
+    public void OpenTwitch() => Application.OpenURL(twitchUrl);
 
     public void ShowOptions()
     {
@@ -203,6 +219,6 @@ public class MainMenu : MonoBehaviour
         }
 
         // Esc в настройках — назад
-        if (optionsPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) ShowMain();
+        if ((optionsPanel.activeSelf || (aboutPanel != null && aboutPanel.activeSelf)) && Input.GetKeyDown(KeyCode.Escape)) ShowMain();
     }
 }
