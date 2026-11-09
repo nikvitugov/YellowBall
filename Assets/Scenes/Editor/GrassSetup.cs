@@ -4,9 +4,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Меню Yellow Ball / Apply Grass: трава на все платформы.
+/// Меню Yellow Light / Apply Grass: трава на все платформы.
 /// Настраивает текстуры (Tools/make_grass.py -> grass_top.png, grass_soil.png), создаёт материал
-/// с шейдером YellowBall/GrassPlatform и ставит его префабам Platform, FallingPlatform, Ground, Square.
+/// с шейдером YellowLight/GrassPlatform и ставит его префабам Platform, FallingPlatform, Ground, Square.
 /// </summary>
 public static class GrassSetup
 {
@@ -21,7 +21,7 @@ public static class GrassSetup
         "Assets/Scenes/Prefab/Square.prefab",
     };
 
-    [MenuItem("Yellow Ball/Apply Grass")]
+    [MenuItem("Yellow Light/Apply Grass")]
     public static void Run()
     {
         AssetDatabase.Refresh();
@@ -30,10 +30,10 @@ public static class GrassSetup
 
         var top = AssetDatabase.LoadAssetAtPath<Texture2D>(TopTex);
         var soil = AssetDatabase.LoadAssetAtPath<Texture2D>(SoilTex);
-        var shader = Shader.Find("YellowBall/GrassPlatform");
+        var shader = Shader.Find("YellowLight/GrassPlatform");
         if (top == null || soil == null || shader == null)
         {
-            Debug.LogError("GrassSetup: нет текстур (запусти Tools/make_grass.py) или шейдера YellowBall/GrassPlatform");
+            Debug.LogError("GrassSetup: нет текстур (запусти Tools/make_grass.py) или шейдера YellowLight/GrassPlatform");
             return;
         }
 

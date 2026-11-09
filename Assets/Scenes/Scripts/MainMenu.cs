@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Главное меню: Play / Options / Quit. В Options — вкладки Audio, Video, Controls.
-/// Интерфейс собирает меню Yellow Ball / Build Game Menu (Editor/MenuBuilder.cs),
+/// Интерфейс собирает меню Yellow Light / Build Game Menu (Editor/MenuBuilder.cs),
 /// оно же проставляет все ссылки ниже. Вид можно править прямо в сцене.
 /// </summary>
 public class MainMenu : MonoBehaviour

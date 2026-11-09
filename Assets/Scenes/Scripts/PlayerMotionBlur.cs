@@ -53,10 +53,10 @@ public class PlayerMotionBlur : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        if (trailShader == null) trailShader = Shader.Find("YellowBall/MotionTrail");
+        if (trailShader == null) trailShader = Shader.Find("YellowLight/MotionTrail");
         if (trailShader == null)
         {
-            Debug.LogWarning("PlayerMotionBlur: шейдер YellowBall/MotionTrail не найден, эффект выключен");
+            Debug.LogWarning("PlayerMotionBlur: шейдер YellowLight/MotionTrail не найден, эффект выключен");
             enabled = false;
             return;
         }

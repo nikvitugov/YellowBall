@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Меню Yellow Ball / Setup Layers & Quality:
+/// Меню Yellow Light / Setup Layers & Quality:
 ///  1) три Sorting Layer: Background -> Default (= Middle) -> Foreground;
 ///  2) LocationLayer на префабах уровня и фоне (порядок внутри Middle фиксирован, без мерцания);
 ///  3) качество картинки: сглаживание (MSAA) у камеры и в настройках качества, текстуры без сжатия.
@@ -40,7 +40,7 @@ public static class LayersSetup
         "Assets/Scenes/Models/HeroAI/hero_ai_tex.jpg",
     };
 
-    [MenuItem("Yellow Ball/Setup Layers & Quality")]
+    [MenuItem("Yellow Light/Setup Layers & Quality")]
     public static void Run()
     {
         CreateSortingLayers();

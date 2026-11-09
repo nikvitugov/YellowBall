@@ -8,7 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
-/// Меню Yellow Ball / Build Game Menu: собирает интерфейс главного меню в сцене GameMenu
+/// Меню Yellow Light / Build Game Menu: собирает интерфейс главного меню в сцене GameMenu
 /// (Play / Options / Quit, вкладки Audio / Video / Controls) и ставит GameMenu первой сценой сборки.
 /// Повторный запуск пересобирает интерфейс с нуля (объект MenuCanvas заменяется).
 /// После сборки всё — обычные UI-объекты, их можно двигать и красить в редакторе.
@@ -26,7 +26,7 @@ public static class MenuBuilder
     static DefaultControls.Resources res;
     static Font font;
 
-    [MenuItem("Yellow Ball/Build Game Menu")]
+    [MenuItem("Yellow Light/Build Game Menu")]
     public static void Build()
     {
         var scene = EditorSceneManager.OpenScene(MenuScenePath);
@@ -64,7 +64,8 @@ public static class MenuBuilder
 
         // ---------- главное меню (справа, герой виден слева) ----------
         var main = Panel(ct, "MainPanel", new Vector2(1f, 0.5f), new Vector2(-380, 0), new Vector2(560, 680));
-        var title = Label(main, "Title", "YELLOW BALL", 68, new Vector2(0, 220), new Vector2(540, 110), Yellow, FontStyle.Bold);
+        var title = Label(main, "Title", "YELLOW LIGHT\nIN THE DARK", 60, new Vector2(0, 225), new Vector2(540, 170), Yellow, FontStyle.Bold);
+        title.lineSpacing = 0.9f;
         title.horizontalOverflow = HorizontalWrapMode.Overflow;
         var play = MenuButton(main, "Play", "Play", new Vector2(0, 60), new Vector2(420, 96), primary: true);
         var options = MenuButton(main, "Options", "Options", new Vector2(0, -60), new Vector2(420, 96));

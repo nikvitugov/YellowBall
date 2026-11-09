@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Настройка игрока в сцене одной командой: меню Yellow Ball / Setup Player.
+/// Настройка игрока в сцене одной командой: меню Yellow Light / Setup Player.
 ///  - две модели героя: HeroAI (сгенерированная) и Hero3D (надутая из картинки, Tools/inflate_hero.py);
 ///    обе стоят на одном месте одного роста, в игре переключаются клавишей Tab;
 ///  - материалы, читаемые меши/текстуры (нужно эффекту распада);
@@ -29,7 +29,7 @@ public static class PlayerSetup
 
     const float DefaultHeight = 0.98f;   // рост героя в юнитах (как у старой модели hero.fbx)
 
-    [MenuItem("Yellow Ball/Setup Player")]
+    [MenuItem("Yellow Light/Setup Player")]
     public static void Run()
     {
         AssetDatabase.Refresh();

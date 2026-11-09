@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Меню Yellow Ball / Convert Level To Prefabs: превращает объекты уровня в экземпляры префабов.
+/// Меню Yellow Light / Convert Level To Prefabs: превращает объекты уровня в экземпляры префабов.
 /// Объекты группируются по имени без номера («Platform (12)» -> Platform). Для каждой группы
 /// префаб создаётся из первого объекта (или берётся существующий, как Triangle), а остальные
 /// подключаются к нему. Всё, чем объект отличался (позиция, размер, цвет, коллайдер, гравитация),
@@ -37,7 +37,7 @@ public static class LevelPrefabs
         }
     }
 
-    [MenuItem("Yellow Ball/Convert Level To Prefabs")]
+    [MenuItem("Yellow Light/Convert Level To Prefabs")]
     public static void Run()
     {
         var scene = SceneManager.GetActiveScene();

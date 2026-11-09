@@ -8,7 +8,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerDeathEffect : MonoBehaviour
 {
-    [Tooltip("Материал частиц (создаётся меню Yellow Ball / Setup Player)")]
+    [Tooltip("Материал частиц (создаётся меню Yellow Light / Setup Player)")]
     public Material particleMaterial;
 
     [Header("Распад")]

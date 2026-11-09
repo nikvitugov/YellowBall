@@ -7,7 +7,7 @@ using UnityEngine;
 ///
 /// Порядок отрисовки задаётся слоем и числом Order, а не расстоянием до камеры, поэтому
 /// перекрывающиеся объекты не мерцают и не «перепрыгивают» друг через друга, когда камера едет.
-/// Слои создаёт меню Yellow Ball / Setup Layers & Quality.
+/// Слои создаёт меню Yellow Light / Setup Layers & Quality.
 /// </summary>
 [ExecuteAlways]
 [DisallowMultipleComponent]

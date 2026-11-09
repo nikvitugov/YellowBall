@@ -1,7 +1,7 @@
 // Полупрозрачная копия модели для шлейфа PlayerMotionBlur.
 // Без освещения, без записи глубины: сам игрок (непрозрачный) перекрывает копии,
 // поэтому размытие видно только позади него.
-Shader "YellowBall/MotionTrail"
+Shader "YellowLight/MotionTrail"
 {
     Properties
     {
