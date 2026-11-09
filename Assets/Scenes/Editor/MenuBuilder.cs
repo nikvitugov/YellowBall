@@ -76,16 +76,14 @@ public static class MenuBuilder
         UnityEventTools.AddPersistentListener(quit.onClick, menu.Quit);
 
         // ---------- об игре ----------
-        var ab = Panel(ct, "AboutPanel", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(900, 640));
-        Label(ab, "Title", "ABOUT", 60, new Vector2(0, 240), new Vector2(600, 90), Yellow, FontStyle.Bold);
-        Label(ab, "MadeBy", "Made by: Nikprogs <size=30><color=#ffffffaa>(itch.io nickname)</color></size>", 44, new Vector2(0, 130), new Vector2(860, 70), Color.white, FontStyle.Bold);
-        var discord = MenuButton(ab, "Discord", "Discord", new Vector2(0, 20), new Vector2(420, 84));
-        discord.GetComponent<Image>().color = new Color(0.35f, 0.4f, 0.95f);
-        Label(ab, "DiscordUrl", menu.discordUrl.Replace("https://", ""), 24, new Vector2(0, -38), new Vector2(860, 36), new Color(1, 1, 1, 0.55f));
-        var twitch = MenuButton(ab, "Twitch", "Twitch", new Vector2(0, -105), new Vector2(420, 84));
-        twitch.GetComponent<Image>().color = new Color(0.57f, 0.27f, 1f);
-        Label(ab, "TwitchUrl", menu.twitchUrl.Replace("https://", ""), 24, new Vector2(0, -163), new Vector2(860, 36), new Color(1, 1, 1, 0.55f));
-        var abBack = MenuButton(ab, "Back", "Back", new Vector2(0, -250), new Vector2(320, 80));
+        var ab = Panel(ct, "AboutPanel", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(900, 740));
+        Label(ab, "Title", "ABOUT", 60, new Vector2(0, 290), new Vector2(600, 90), Yellow, FontStyle.Bold);
+        Label(ab, "MadeBy", "Made by: Nikprogs <size=30><color=#ffffffaa>(itch.io nickname)</color></size>", 44, new Vector2(0, 195), new Vector2(860, 70), Color.white, FontStyle.Bold);
+        var itch = LinkButton(ab, "Itch", "itch.io", menu.itchUrl, 95, new Color(0.98f, 0.36f, 0.36f));
+        var discord = LinkButton(ab, "Discord", "Discord", menu.discordUrl, -20, new Color(0.35f, 0.4f, 0.95f));
+        var twitch = LinkButton(ab, "Twitch", "Twitch", menu.twitchUrl, -135, new Color(0.57f, 0.27f, 1f));
+        var abBack = MenuButton(ab, "Back", "Back", new Vector2(0, -295), new Vector2(320, 80));
+        UnityEventTools.AddPersistentListener(itch.onClick, menu.OpenItch);
         UnityEventTools.AddPersistentListener(discord.onClick, menu.OpenDiscord);
         UnityEventTools.AddPersistentListener(twitch.onClick, menu.OpenTwitch);
         UnityEventTools.AddPersistentListener(abBack.onClick, menu.ShowMain);
@@ -219,6 +217,15 @@ public static class MenuBuilder
     static void RowLabel(Transform parent, string text, float y) =>
         Label(parent, "Label " + text, text, 36, new Vector2(-330, y), new Vector2(340, 60), Color.white,
               FontStyle.Normal, TextAnchor.MiddleLeft);
+
+    // кнопка-ссылка: цветная кнопка и под ней мелко сам адрес
+    static Button LinkButton(Transform parent, string name, string label, string url, float y, Color color)
+    {
+        var b = MenuButton(parent, name, label, new Vector2(0, y), new Vector2(420, 76));
+        b.GetComponent<Image>().color = color;
+        Label(parent, name + "Url", url.Replace("https://", "").TrimEnd('/'), 24, new Vector2(0, y - 56), new Vector2(860, 34), new Color(1, 1, 1, 0.55f));
+        return b;
+    }
 
     static Button MenuButton(Transform parent, string name, string label, Vector2 pos, Vector2 size, bool primary = false)
     {

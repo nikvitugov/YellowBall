@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
     public GameObject aboutPanel;
 
     [Header("About")]
+    public string itchUrl = "https://nikprogs.itch.io/";
     public string discordUrl = "https://discord.gg/NU6rnQV6R";
     public string twitchUrl = "https://www.twitch.tv/astronaute_2015_niki";
 
@@ -152,6 +153,7 @@ public class MainMenu : MonoBehaviour
         aboutPanel.SetActive(true);
     }
 
+    public void OpenItch() => Application.OpenURL(itchUrl);
     public void OpenDiscord() => Application.OpenURL(discordUrl);
     public void OpenTwitch() => Application.OpenURL(twitchUrl);
 
