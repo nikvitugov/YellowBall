@@ -2,6 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Плавная камера: догоняет игрока с небольшой задержкой и смотрит чуть вперёд по ходу бега.
+/// Расстояние до игрока умножается на настройку «приближение камеры» (GameSettings.CameraZoom).
 /// Вешается на Main Camera. Если камера была дочерней у игрока — при старте отцепляется,
 /// сохраняя текущее смещение.
 /// </summary>
@@ -29,7 +30,8 @@ public class CameraFollow : MonoBehaviour
 
     private Rigidbody2D targetRb;
     private float ahead;
-    private float velX, velY;
+    private float velX, velY, velZ;
+    private float zoom = 1f;
 
     private void Start()
     {
@@ -40,6 +42,8 @@ public class CameraFollow : MonoBehaviour
         if (transform.parent == target) transform.SetParent(null, true);
 
         targetRb = target.GetComponent<Rigidbody2D>();
+        zoom = GameSettings.CameraZoom;
+        transform.position = target.position + offset / zoom;   // сразу с нужным приближением
     }
 
     private void LateUpdate()
@@ -48,11 +52,13 @@ public class CameraFollow : MonoBehaviour
         float wantAhead = Mathf.Abs(vx) > 0.5f ? Mathf.Sign(vx) * lookAhead : ahead;
         ahead = Mathf.MoveTowards(ahead, wantAhead, lookAheadSpeed * Time.deltaTime);
 
-        Vector3 goal = target.position + offset + Vector3.right * ahead;
+        // приближение из настроек: смещение камеры делим на него (1.5 — в 1.5 раза ближе к герою)
+        zoom = GameSettings.CameraZoom;
+        Vector3 goal = target.position + offset / zoom + Vector3.right * ahead / zoom;
         Vector3 p = transform.position;
         p.x = Mathf.SmoothDamp(p.x, goal.x, ref velX, smoothTimeX);
         p.y = Mathf.SmoothDamp(p.y, goal.y, ref velY, smoothTimeY);
-        p.z = goal.z;
+        p.z = Mathf.SmoothDamp(p.z, goal.z, ref velZ, 0.15f);
         transform.position = p;
     }
 }

@@ -67,9 +67,10 @@ public class PlayerMove : MonoBehaviour
         jumpHeld = false;
         if (IsDead) return;
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) moveInput -= 1f;
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) moveInput += 1f;
-        jumpHeld = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space);
+        // клавиши берутся из настроек (меню Options -> Controls)
+        if (GameSettings.Held(GameSettings.Action.Left)) moveInput -= 1f;
+        if (GameSettings.Held(GameSettings.Action.Right)) moveInput += 1f;
+        jumpHeld = GameSettings.Held(GameSettings.Action.Jump);
     }
 
     private void FixedUpdate()
